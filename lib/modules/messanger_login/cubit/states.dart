@@ -1,0 +1,4 @@
+
+abstract class MessangerLoginState{}
+class MessangerLogininitialState extends MessangerLoginState{}
+class MessangerLoginChangePasswordVisibilityState extends MessangerLoginState{}
