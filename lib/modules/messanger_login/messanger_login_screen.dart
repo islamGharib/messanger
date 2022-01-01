@@ -2,8 +2,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:messanger_app/models/messanger_register/messanger_register_screen.dart';
+import 'package:messanger_app/modules/messanger_register/messanger_register_screen.dart';
 import 'package:messanger_app/shared/component/components.dart';
+import 'package:messanger_app/shared/cubit/cubit.dart';
+import 'package:messanger_app/shared/cubit/states.dart';
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
 
@@ -19,13 +21,13 @@ class MessangerLoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (BuildContext context) => MessangerLoginCubit(),
-      child: BlocConsumer<MessangerLoginCubit,MessangerLoginState>(
+    return BlocConsumer<MessangerLoginCubit, MessangerLoginState>(
         listener: (context, state){
 
         },
         builder: (context,state){
           MessangerLoginCubit loginCubit = MessangerLoginCubit.get(context);
+          UsersCubit user = UsersCubit.get(context);
           return Scaffold(
 
             body: Center(
@@ -88,6 +90,7 @@ class MessangerLoginScreen extends StatelessWidget {
                             if(formKey.currentState!.validate()){
                               print(emailController.text);
                               print(passController.text);
+                              user.getDataFromDatabase(email: emailController.text, pass: passController.text);
                             }
 
                           },
@@ -119,7 +122,6 @@ class MessangerLoginScreen extends StatelessWidget {
 
           );
         },
-      ),
-    );
+      );
   }
 }
