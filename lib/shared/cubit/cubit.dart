@@ -4,30 +4,32 @@ import 'package:messanger_app/models/user_model.dart';
 import 'package:messanger_app/shared/cubit/states.dart';
 import 'package:sqflite/sqflite.dart';
 
-class UsersCubit extends Cubit <UsersStates>{
+class UsersCubit extends Cubit <UsersStates> {
   UsersCubit() : super(AppInitialState());
+
   static UsersCubit get(context) => BlocProvider.of(context);
+  UserModel? model;
 
   Database? database;
-  // create and open database
-  void createDatabase() async{
 
+  // create and open database
+  void createDatabase() async {
     openDatabase(
         'user.db',
         version: 1,
-        onCreate: (database,version){
+        onCreate: (database, version) {
           print('database created');
           database.execute(
               'CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT, '
                   'email TEXT, password TEXT, phone TEXT)'
-          ).then((value){
+          ).then((value) {
             print('Table Created');
-          }).catchError((error){
+          }).catchError((error) {
             print('Error When Creating Table');
           });
         },
 
-        onOpen: (database){
+        onOpen: (database) {
           print('database opened');
           // getDataFromDatabase(database);
         }
@@ -38,34 +40,50 @@ class UsersCubit extends Cubit <UsersStates>{
   }
 
   // insert to database
-  void insertToDatabase(UserModel model) async{
+  void insertToDatabase(UserModel model) async {
     await database!.transaction((txn) async {
-      await txn.rawInsert('INSERT INTO users (name, email, password, phone) VALUES ("${model.name}", "${model.email}", "${model.password}", "${model.phone}")').then((value)
-      {
+      await txn.rawInsert(
+          'INSERT INTO users (name, email, password, phone) VALUES ("${model
+              .name}", "${model.email}", "${model.password}", "${model
+              .phone}")').then((value) {
         print('$value inserted successfully');
         emit(AppInsertDataToDatabaseState());
         // getDataFromDatabase(database!);
-      }).catchError((error){
+      }).catchError((error) {
         print('Error When Inserting New Record ${error.toString()}');
-
       });
     });
   }
 
   // Get all data from database
-  Future  getDataFromDatabase({
+  Future getDataFromDatabase({
     required dynamic email,
     required dynamic pass,
-}) async{
-    UserModel? model;
-
+  }) async {
     emit(AppGetDatabaseLoadingState());
-    List<Map> result = await database!.rawQuery('select * from users where email=? and password=?', [email, pass]);
-    print(result.length);
-    result.forEach((element) {
-      model = UserModel(element['name'], element['password'], element['name'], element['phone']);
+    await database!.rawQuery(
+        'select * from users where email=? and password=?', [email, pass])
+        .then((value) {
+      List<Map> result = value;
+      if (result.length > 0) {
+        print(result.length);
+        result.forEach((element) {
+          model = UserModel(
+              element['name'], element['email'], element['password'],
+              element['phone']);
+        });
+        print(model!.phone);
+        emit(AppGetDataFromDatabaseState());
+      }
+    }).catchError((error){
+      print(error.toString());
+      emit(AppErrorGettingDatabaseState());
     });
-    print(model!.phone);
+  }
+}
+        
+    
+    
 
     //database!.rawQuery('select * from users ').then((value) {
 
@@ -79,7 +97,7 @@ class UsersCubit extends Cubit <UsersStates>{
       //     doneTasks.add(element);
       //   else archivedTasks.add(element);
       // });
-      emit(AppGetDataFromDatabaseState());
+
     // database!.query(
     //     "users",
     //   where: "email = ?",
@@ -89,11 +107,10 @@ class UsersCubit extends Cubit <UsersStates>{
     //   print(value.length);
     //   emit(AppGetDataFromDatabaseState());
     // });
-  }
+  
 
 
 
 
 
 
-}

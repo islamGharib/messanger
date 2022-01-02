@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messanger_app/models/user_model.dart';
 import 'package:messanger_app/modules/messanger_register/messanger_register_screen.dart';
 import 'package:messanger_app/shared/component/components.dart';
 import 'package:messanger_app/shared/cubit/cubit.dart';
@@ -17,7 +18,7 @@ class MessangerLoginScreen extends StatelessWidget {
 
   final formKey = GlobalKey<FormState>();
 
-
+  UserModel? model;
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +87,15 @@ class MessangerLoginScreen extends StatelessWidget {
 
                         SizedBox(height: 15,),
                         defaultButton(
-                          buttonPressed: (){
+                          buttonPressed: () async {
                             if(formKey.currentState!.validate()){
                               print(emailController.text);
                               print(passController.text);
-                              user.getDataFromDatabase(email: emailController.text, pass: passController.text);
+                              await user.getDataFromDatabase(email: emailController.text, pass: passController.text);
+                              model = user.model;
+                              if(model == null) print('mail or password is not correct');
+                              else print(model!.email);
+
                             }
 
                           },
