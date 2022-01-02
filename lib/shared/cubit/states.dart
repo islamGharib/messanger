@@ -5,3 +5,4 @@ class AppGetDataFromDatabaseState extends UsersStates{}
 class AppInsertDataToDatabaseState extends UsersStates{}
 class AppGetDatabaseLoadingState extends UsersStates{}
 class AppErrorGettingDatabaseState extends UsersStates{}
+class AppUserIsExistedState extends UsersStates{}

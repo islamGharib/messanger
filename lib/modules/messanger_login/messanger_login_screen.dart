@@ -91,7 +91,7 @@ class MessangerLoginScreen extends StatelessWidget {
                             if(formKey.currentState!.validate()){
                               print(emailController.text);
                               print(passController.text);
-                              await user.getDataFromDatabase(email: emailController.text, pass: passController.text);
+                              await user.login(email: emailController.text, pass: passController.text);
                               model = user.model;
                               if(model == null) print('mail or password is not correct');
                               else print(model!.email);

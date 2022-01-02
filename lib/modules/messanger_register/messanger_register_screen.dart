@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messanger_app/models/user_model.dart';
 import 'package:messanger_app/shared/component/components.dart';
 import 'package:messanger_app/shared/cubit/cubit.dart';
+import 'package:messanger_app/shared/cubit/states.dart';
 
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
@@ -116,13 +117,14 @@ class MessangerRegisterScreen extends StatelessWidget {
                       ),
                       SizedBox(height: 15,),
                       defaultButton(
-                        buttonPressed: (){
+                        buttonPressed: () async {
                           if(formKey.currentState!.validate()){
                             print(emailController.text);
                             print(passController.text);
                             model = UserModel(nameController.text, emailController.text, passController.text, phoneController.text);
-                            user.insertToDatabase(model!);
-
+                            await user.register(model: model!);
+                            if(user.userIsExisted)
+                              print('User is already existed');
                           }
 
                         },

@@ -56,7 +56,7 @@ class UsersCubit extends Cubit <UsersStates> {
   }
 
   // Get all data from database
-  Future getDataFromDatabase({
+  Future login({
     required dynamic email,
     required dynamic pass,
   }) async {
@@ -80,6 +80,26 @@ class UsersCubit extends Cubit <UsersStates> {
       emit(AppErrorGettingDatabaseState());
     });
   }
+
+  bool userIsExisted = false;
+  Future register({
+    required UserModel model
+  }) async {
+    emit(AppGetDatabaseLoadingState());
+    await database!.rawQuery(
+        'select * from users where email=? or phone=?', [model.email, model.phone])
+        .then((value) {
+      List<Map> result = value;
+      if (result.length > 0) {
+        userIsExisted = true;
+        print(result.length);
+        emit(AppUserIsExistedState());
+      }else{
+        insertToDatabase(model);
+      }
+    });
+  }
+
 }
         
     
