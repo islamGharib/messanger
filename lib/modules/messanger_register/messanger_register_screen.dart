@@ -2,9 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messanger_app/models/user_model.dart';
+import 'package:messanger_app/modules/messanger_login/messanger_login_screen.dart';
 import 'package:messanger_app/shared/component/components.dart';
 import 'package:messanger_app/shared/cubit/cubit.dart';
-import 'package:messanger_app/shared/cubit/states.dart';
 
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
@@ -125,6 +125,7 @@ class MessangerRegisterScreen extends StatelessWidget {
                             await user.register(model: model!);
                             if(user.userIsExisted)
                               showFlutterToast(message: "User is already existed", state: ToastStates.ERROR);
+                            else navigateAndFinish(context, MessangerLoginScreen());
                           }
 
                         },

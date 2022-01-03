@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:messanger_app/models/user_model.dart';
+import 'package:messanger_app/modules/messanger_home/messanger_home_screen.dart';
 import 'package:messanger_app/modules/messanger_register/messanger_register_screen.dart';
 import 'package:messanger_app/shared/component/components.dart';
 import 'package:messanger_app/shared/cubit/cubit.dart';
@@ -95,7 +96,7 @@ class MessangerLoginScreen extends StatelessWidget {
                               model = user.model;
                               if(model == null) {
                                 showFlutterToast(message: "mail or password is not correct", state: ToastStates.ERROR);
-                            } else print(model!.email);
+                            } else navigateAndFinish(context, MessangerHomeScreen());
 
                             }
 
