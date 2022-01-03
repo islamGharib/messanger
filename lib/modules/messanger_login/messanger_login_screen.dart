@@ -2,7 +2,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:messanger_app/models/user_model.dart';
+import 'package:messanger_app/modules/messanger_register/messanger_register_screen.dart';
 import 'package:messanger_app/shared/component/components.dart';
+import 'package:messanger_app/shared/cubit/cubit.dart';
+import 'package:messanger_app/shared/cubit/states.dart';
 import 'cubit/cubit.dart';
 import 'cubit/states.dart';
 
@@ -14,17 +18,17 @@ class MessangerLoginScreen extends StatelessWidget {
 
   final formKey = GlobalKey<FormState>();
 
-
+  UserModel? model;
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(create: (BuildContext context) => MessangerLoginCubit(),
-      child: BlocConsumer<MessangerLoginCubit,MessangerLoginState>(
+    return BlocConsumer<MessangerLoginCubit, MessangerLoginState>(
         listener: (context, state){
 
         },
         builder: (context,state){
           MessangerLoginCubit loginCubit = MessangerLoginCubit.get(context);
+          UsersCubit user = UsersCubit.get(context);
           return Scaffold(
 
             body: Center(
@@ -83,10 +87,16 @@ class MessangerLoginScreen extends StatelessWidget {
 
                         SizedBox(height: 15,),
                         defaultButton(
-                          buttonPressed: (){
+                          buttonPressed: () async {
                             if(formKey.currentState!.validate()){
                               print(emailController.text);
                               print(passController.text);
+                              await user.login(email: emailController.text, pass: passController.text);
+                              model = user.model;
+                              if(model == null) {
+                                showFlutterToast(message: "mail or password is not correct", state: ToastStates.ERROR);
+                            } else print(model!.email);
+
                             }
 
                           },
@@ -100,7 +110,9 @@ class MessangerLoginScreen extends StatelessWidget {
                               'Don\'t have an account?',
                             ),
                             defaultTextButton(
-                              func: (){},
+                              func: (){
+                                navigateTo(context, MessangerRegisterScreen());
+                              },
                               text: 'register',
                             ),
                           ],
@@ -116,7 +128,6 @@ class MessangerLoginScreen extends StatelessWidget {
 
           );
         },
-      ),
-    );
+      );
   }
 }

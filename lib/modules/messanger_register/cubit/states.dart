@@ -1,0 +1,4 @@
+
+abstract class MessangerRegisterState{}
+class MessangerRegisterinitialState extends MessangerRegisterState{}
+class MessangerRegisterChangePasswordVisibilityState extends MessangerRegisterState{}
