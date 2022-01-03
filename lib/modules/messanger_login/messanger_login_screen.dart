@@ -93,8 +93,9 @@ class MessangerLoginScreen extends StatelessWidget {
                               print(passController.text);
                               await user.login(email: emailController.text, pass: passController.text);
                               model = user.model;
-                              if(model == null) print('mail or password is not correct');
-                              else print(model!.email);
+                              if(model == null) {
+                                showFlutterToast(message: "mail or password is not correct", state: ToastStates.ERROR);
+                            } else print(model!.email);
 
                             }
 

@@ -124,7 +124,7 @@ class MessangerRegisterScreen extends StatelessWidget {
                             model = UserModel(nameController.text, emailController.text, passController.text, phoneController.text);
                             await user.register(model: model!);
                             if(user.userIsExisted)
-                              print('User is already existed');
+                              showFlutterToast(message: "User is already existed", state: ToastStates.ERROR);
                           }
 
                         },
